@@ -52,16 +52,13 @@ xTaskHandle handle_print_task;
 
 QueueHandle_t queue_print;
 
-// char *data1;
-// char *data6;
 #define size 50
 
-uint8_t *data1;
-uint8_t *data6;
+uint8_t data1[size];
+uint8_t data6[size];
 
 uint8_t data_byte1;
 uint8_t data_byte6;
-
 
 volatile uint32_t count_size6 = 0;
 volatile uint32_t count_size1 = 0;
@@ -115,14 +112,12 @@ int main(void)
   MX_USART2_UART_Init();
   MX_USART6_UART_Init();
   /* USER CODE BEGIN 2 */
-  data1 = pvPortMalloc(sizeof(uint8_t) * 50);
-  data6 = pvPortMalloc(sizeof(uint8_t) * 50);
 
   status = xTaskCreate(print_task, "print_task", 400, NULL, 2, &handle_print_task);
 
   configASSERT(status == pdPASS);
 
-  queue_print = xQueueCreate(20, sizeof(uint8_t *));
+  queue_print = xQueueCreate(20, sizeof(data1));
 
   configASSERT(queue_print != NULL);
 
@@ -306,9 +301,9 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
       if (data_byte1 == '\n')
       {
         data1[count_size1] = '\0';
-        xQueueSendFromISR(queue_print, &data1, NULL);
+        xQueueSendFromISR(queue_print, data1, NULL);
         count_size1 = 0;
-        memset(data1,0,sizeof(&data1));
+        memset(data1, 0, sizeof(data1));
       }
     }
 
@@ -324,9 +319,9 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
       if (data_byte6 == '\n')
       {
         data6[count_size6] = '\0';
-        xQueueSendFromISR(queue_print, &data6, NULL);
+        xQueueSendFromISR(queue_print, data6, NULL);
         count_size6 = 0;
-        // memset(data6,0,sizeof(&data6));
+        memset(data6, 0, sizeof(data6));
       }
     }
 

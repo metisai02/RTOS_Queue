@@ -6,14 +6,12 @@
  */
 
 #include "main.h"
-extern uint8_t *data1;
-extern uint8_t *data6;
 void print_task(void *param)
 {
 
 	UBaseType_t free_spaces;
 	uint8_t arr[10];
-	uint8_t *msg;
+	uint8_t msg[50];
 	while (1)
 	{
 
@@ -23,9 +21,8 @@ void print_task(void *param)
 			sprintf((char *)arr, "Left: %u\n", (unsigned int)free_spaces);
 			HAL_UART_Transmit(&huart2, arr, 10, 1000);
 
-			HAL_UART_Transmit(&huart2,msg, strlen((char *)msg), HAL_MAX_DELAY);
-			vPortFree(msg);
-
+			HAL_UART_Transmit(&huart2, msg, 50, HAL_MAX_DELAY);
+			
 		}
 	}
 }
