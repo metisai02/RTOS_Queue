@@ -5851,10 +5851,10 @@ static void UART_SetConfig(UART_HandleTypeDef *huart)
  8002694:	51eb851f 	.word	0x51eb851f
 
 08002698 <print_task>:
- *      Author: DELL
  */
 
 #include "main.h"
+extern UART_HandleTypeDef huart2;
 void print_task(void *param)
 {
  8002698:	b580      	push	{r7, lr}

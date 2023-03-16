@@ -6,6 +6,7 @@
  */
 
 #include "main.h"
+extern UART_HandleTypeDef huart2;
 void print_task(void *param)
 {
 
@@ -22,7 +23,7 @@ void print_task(void *param)
 			HAL_UART_Transmit(&huart2, arr, 10, 1000);
 
 			HAL_UART_Transmit(&huart2, msg, 50, HAL_MAX_DELAY);
-			
+
 		}
 	}
 }
