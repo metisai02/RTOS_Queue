@@ -1,3 +1,0 @@
-../Src/handle_task.c:24:6:print_task	88	static
-../Src/handle_task.c:47:6:led_task	24	static
-../Src/handle_task.c:61:6:receive_task	16	static

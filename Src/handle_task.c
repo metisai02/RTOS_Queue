@@ -10,30 +10,23 @@ extern UART_HandleTypeDef huart2;
 extern UART_HandleTypeDef huart1;
 extern UART_HandleTypeDef huart6;
 extern UART_HandleTypeDef uart;
+
 #define size 50
-
-extern uint8_t data1[size];
-extern uint8_t data6[size];
-
-extern uint8_t data_byte1;
+extern uint8_t data_byte1;	
 extern uint8_t data_byte6;
-
-extern uint32_t count_size6;
-extern uint32_t count_size1;
-
 void print_task(void *param)
 {
 
 	UBaseType_t free_spaces;
 	uint8_t arr[10];
 	uint8_t msg[50];
-//	xSemaphoreTake(xSemaphore, portMAX_DELAY);
+	//	xSemaphoreTake(xSemaphore, portMAX_DELAY);
 	while (1)
 	{
 		if (xQueueReceive(queue_print, &msg, portMAX_DELAY) == pdPASS)
 		{
 			free_spaces = uxQueueSpacesAvailable(queue_print);
-			if (free_spaces == 1)
+			if (free_spaces == 0)
 				xSemaphoreGive(xSemaphore);
 			sprintf((char *)arr, "Left: %u\n", (unsigned int)free_spaces);
 			HAL_UART_Transmit(&huart2, arr, 10, 1000);
@@ -46,7 +39,7 @@ void print_task(void *param)
 }
 void led_task(void *param)
 {
-	
+
 	while (1)
 	{
 		xSemaphoreTake(xSemaphore, portMAX_DELAY);
@@ -54,13 +47,19 @@ void led_task(void *param)
 		while (HAL_GetTick() - count < 10000)
 		{
 			HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
-			vTaskDelay(100);
+			vTaskDelay(100);	
 		}
 	}
 }
-void receive_task(void*param )
+void receive_task(void *param)
 {
-	while(1)
+
+	uint8_t data1[size];
+	uint8_t data6[size];
+
+	uint32_t count_size6 = 0;
+	uint32_t count_size1 = 0;
+	while (1)
 	{
 		xSemaphoreTake(xsemaphoreIT, portMAX_DELAY);
 		if (uart.Instance == USART1)
@@ -73,7 +72,7 @@ void receive_task(void*param )
 				if (data_byte1 == '\n')
 				{
 					data1[count_size1] = '\0';
-					xQueueSend(queue_print, data1,portMAX_DELAY);
+					xQueueSend(queue_print, data1, portMAX_DELAY);
 					count_size1 = 0;
 					memset(data1, 0, sizeof(data1));
 				}
@@ -91,7 +90,7 @@ void receive_task(void*param )
 				if (data_byte6 == '\n')
 				{
 					data6[count_size6] = '\0';
-					xQueueSend(queue_print, data6,portMAX_DELAY);
+					xQueueSend(queue_print, data6, portMAX_DELAY);
 					count_size6 = 0;
 					memset(data6, 0, sizeof(data6));
 				}
