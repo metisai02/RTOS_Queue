@@ -13,6 +13,7 @@ void print_task(void *param)
 	UBaseType_t free_spaces;
 	uint8_t arr[10];
 	uint8_t msg[50];
+	xSemaphoreTake(xSemaphore, portMAX_DELAY);
 	while (1)
 	{
 		if (xQueueReceive(queue_print, &msg, portMAX_DELAY) == pdPASS)
