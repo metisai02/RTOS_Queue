@@ -1,0 +1,8 @@
+/Drivers/
+/Src/
+/Startup/
+/ThirdParty/
+/makefile
+/objects.list
+/objects.mk
+/sources.mk

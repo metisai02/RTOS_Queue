@@ -1,2 +1,2 @@
-handle_task.c:10:6:print_task	88	static
-handle_task.c:31:6:led_task	24	static
+../Src/handle_task.c:10:6:print_task	88	static
+../Src/handle_task.c:31:6:led_task	24	static
