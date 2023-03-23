@@ -26,6 +26,7 @@ void print_task(void *param)
 			HAL_UART_Transmit(&huart2, msg, 50, HAL_MAX_DELAY);
 			memset(msg, 0, sizeof(msg));
 			memset(arr, 0, sizeof(arr));
+			vTaskDelay(1);
 		}
 	}
 }
