@@ -23,6 +23,8 @@ void print_task(void *param)
 			sprintf((char *)arr, "Left: %u\n", (unsigned int)free_spaces);
 			HAL_UART_Transmit(&huart2, arr, 10, 1000);
 			HAL_UART_Transmit(&huart2, msg, 50, HAL_MAX_DELAY);
+			memset(msg, 0, sizeof(msg));
+			memset(arr, 0, sizeof(arr));
 		}
 	}
 }
