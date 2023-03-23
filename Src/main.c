@@ -118,7 +118,7 @@ int main(void)
 
   configASSERT(status == pdPASS);
 
-  status = xTaskCreate(led_task, "led-task", 200, NULL, 2, &handle_led_task);
+  status = xTaskCreate(led_task, "led-task", 200, NULL, 3, &handle_led_task);
   queue_print = xQueueCreate(20, sizeof(data1));
   configASSERT(queue_print != NULL);
 
@@ -129,6 +129,8 @@ int main(void)
   // memset(data6,0,sizeof(data6));
   HAL_UART_Receive_IT(&huart1, &data_byte1, 1);
   HAL_UART_Receive_IT(&huart6, &data_byte6, 1);
+
+  xSemaphoreTake(xSemaphore, portMAX_DELAY);
 
   vTaskStartScheduler();
   /* USER CODE END 2 */
@@ -231,7 +233,7 @@ static void MX_USART2_UART_Init(void)
 
   /* USER CODE END USART2_Init 1 */
   huart2.Instance = USART2;
-  huart2.Init.BaudRate = 9600;
+  huart2.Init.BaudRate = 1200;
   huart2.Init.WordLength = UART_WORDLENGTH_8B;
   huart2.Init.StopBits = UART_STOPBITS_1;
   huart2.Init.Parity = UART_PARITY_NONE;
