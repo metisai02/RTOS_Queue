@@ -46,9 +46,11 @@ extern "C" {
 
 extern xTaskHandle handle_print_task;
 extern xTaskHandle handle_led_task;
+extern xTaskHandle handle_receive_task;
 
 extern QueueHandle_t queue_print;
 extern SemaphoreHandle_t xSemaphore;
+extern SemaphoreHandle_t xsemaphoreIT;
 
 extern UART_HandleTypeDef huart2;
 /* USER CODE END ET */
@@ -69,6 +71,7 @@ void Error_Handler(void);
 /* USER CODE BEGIN EFP */
 void print_task(void *param);
 void led_task(void *param);
+void receive_task(void*param );
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
