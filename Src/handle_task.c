@@ -12,7 +12,11 @@ extern UART_HandleTypeDef huart6;
 extern UART_HandleTypeDef uart;
 
 #define size 50
+<<<<<<< HEAD
 extern uint8_t data_byte1;
+=======
+extern uint8_t data_byte1;	
+>>>>>>> 968aef75b25074cf29205f7316f49c9ba17536be
 extern uint8_t data_byte6;
 void print_task(void *param)
 {
@@ -47,7 +51,56 @@ void led_task(void *param)
 		while (HAL_GetTick() - count < 10000)
 		{
 			HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
-			vTaskDelay(100);
+			vTaskDelay(100);	
+		}
+	}
+}
+void receive_task(void *param)
+{
+
+	uint8_t data1[size];
+	uint8_t data6[size];
+
+	uint32_t count_size6 = 0;
+	uint32_t count_size1 = 0;
+	while (1)
+	{
+		xSemaphoreTake(xsemaphoreIT, portMAX_DELAY);
+		if (uart.Instance == USART1)
+		{
+			if (count_size1 < 100)
+			{
+				data1[count_size1] = data_byte1;
+				count_size1++;
+
+				if (data_byte1 == '\n')
+				{
+					data1[count_size1] = '\0';
+					xQueueSend(queue_print, data1, portMAX_DELAY);
+					count_size1 = 0;
+					memset(data1, 0, sizeof(data1));
+				}
+			}
+
+			HAL_UART_Receive_IT(&huart1, &data_byte1, 1);
+		}
+		else if (uart.Instance == USART6)
+		{
+
+			if (count_size6 < 100)
+			{
+				data6[count_size6] = data_byte6;
+				count_size6++;
+				if (data_byte6 == '\n')
+				{
+					data6[count_size6] = '\0';
+					xQueueSend(queue_print, data6, portMAX_DELAY);
+					count_size6 = 0;
+					memset(data6, 0, sizeof(data6));
+				}
+			}
+
+			HAL_UART_Receive_IT(&huart6, &data_byte6, 1);
 		}
 	}
 }

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.o"
 "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.o"
 "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.o"
@@ -14,6 +15,8 @@
 "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.o"
 "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.o"
 "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.o"
+=======
+>>>>>>> 968aef75b25074cf29205f7316f49c9ba17536be
 "Src/handle_task.o"
 "Src/main.o"
 "Src/stm32f4xx_hal_msp.o"

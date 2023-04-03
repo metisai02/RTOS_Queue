@@ -1,3 +1,6 @@
+<<<<<<< HEAD
 handle_task.c:17:6:print_task	88	static
 handle_task.c:40:6:led_task	24	static
 handle_task.c:54:6:receive_task	136	static
+=======
+>>>>>>> 968aef75b25074cf29205f7316f49c9ba17536be
