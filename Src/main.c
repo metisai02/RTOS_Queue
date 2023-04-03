@@ -53,6 +53,7 @@ xTaskHandle handle_led_task;
 xTaskHandle handle_receive_task;
 
 QueueHandle_t queue_print;
+QueueHandle_t queue_IT;
 SemaphoreHandle_t xSemaphore;
 SemaphoreHandle_t xsemaphoreIT;
 // #define size 50
@@ -128,6 +129,7 @@ int main(void)
   status = xTaskCreate(receive_task, "receive_task", 400, NULL, 4, &handle_receive_task);
 
   configASSERT(status == pdPASS);
+  queue_IT = xQueueCreate(2, 4);
 
   vSemaphoreCreateBinary(xSemaphore);
   xsemaphoreIT = xSemaphoreCreateCounting(20, 0);
@@ -320,10 +322,20 @@ static void MX_GPIO_Init(void)
 /* USER CODE BEGIN 4 */
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
-  portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
-  uart.Instance = huart->Instance;
-  xSemaphoreGiveFromISR(xsemaphoreIT, &xHigherPriorityTaskWoken);
-  portEND_SWITCHING_ISR(xHigherPriorityTaskWoken);
+    portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
+    uint32_t check;
+    if (huart->Instance == USART1)
+    {
+      check = USART1_BASE;
+      xQueueSendFromISR(queue_IT, &check, &xHigherPriorityTaskWoken);
+    }
+    else if (huart->Instance == USART6)
+    {
+      check = USART6_BASE;
+      xQueueSendFromISR(queue_IT, &check, &xHigherPriorityTaskWoken);
+    }
+    xSemaphoreGiveFromISR(xsemaphoreIT, &xHigherPriorityTaskWoken);
+    portEND_SWITCHING_ISR(xHigherPriorityTaskWoken);
 }
 
 /* USER CODE END 4 */

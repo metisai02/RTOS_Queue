@@ -54,49 +54,53 @@ void led_task(void *param)
 void receive_task(void *param)
 {
 
-	uint8_t data1[size];
-	uint8_t data6[size];
+    uint8_t data1[size];
+    uint8_t data6[size];
+    memset(data1, 0, sizeof(data1));
+    memset(data6, 0, sizeof(data6));
+    uint32_t count_size6 = 0;
+    uint32_t count_size1 = 0;
+    uint32_t check;
+    while (1)
+    {
 
-	uint32_t count_size6 = 0;
-	uint32_t count_size1 = 0;
-	while (1)
-	{
-		xSemaphoreTake(xsemaphoreIT, portMAX_DELAY);
-		if (uart.Instance == USART1)
-		{
-			if (count_size1 < 100)
-			{
-				data1[count_size1] = data_byte1;
-				count_size1++;
+        xSemaphoreTake(xsemaphoreIT, portMAX_DELAY);
+        xQueueReceive(queue_IT, &check, portMAX_DELAY);
+        if (check == USART1_BASE)
+        {
+            if (count_size1 < 100)
+            {
+                data1[count_size1] = data_byte1;
+                count_size1++;
 
-				if (data_byte1 == '\n')
-				{
-					data1[count_size1] = '\0';
-					xQueueSend(queue_print, data1, portMAX_DELAY);
-					count_size1 = 0;
-					memset(data1, 0, sizeof(data1));
-				}
-			}
+                if (data_byte1 == '\n')
+                {
+                    data1[count_size1] = '\0';
+                    xQueueSend(queue_print, data1, portMAX_DELAY);
+                    count_size1 = 0;
+                    memset(data1, 0, sizeof(data1));
+                }
+            }
 
-			HAL_UART_Receive_IT(&huart1, &data_byte1, 1);
-		}
-		else if (uart.Instance == USART6)
-		{
+            HAL_UART_Receive_IT(&huart1, &data_byte1, 1);
+        }
+        else if (check == USART6_BASE)
+        {
 
-			if (count_size6 < 100)
-			{
-				data6[count_size6] = data_byte6;
-				count_size6++;
-				if (data_byte6 == '\n')
-				{
-					data6[count_size6] = '\0';
-					xQueueSend(queue_print, data6, portMAX_DELAY);
-					count_size6 = 0;
-					memset(data6, 0, sizeof(data6));
-				}
-			}
+            if (count_size6 < 100)
+            {
+                data6[count_size6] = data_byte6;
+                count_size6++;
+                if (data_byte6 == '\n')
+                {
+                    data6[count_size6] = '\0';
+                    xQueueSend(queue_print, data6, portMAX_DELAY);
+                    count_size6 = 0;
+                    memset(data6, 0, sizeof(data6));
+                }
+            }
 
-			HAL_UART_Receive_IT(&huart6, &data_byte6, 1);
-		}
-	}
+            HAL_UART_Receive_IT(&huart6, &data_byte6, 1);
+        }
+    }
 }

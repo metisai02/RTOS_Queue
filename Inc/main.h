@@ -49,6 +49,7 @@ extern xTaskHandle handle_led_task;
 extern xTaskHandle handle_receive_task;
 
 extern QueueHandle_t queue_print;
+extern QueueHandle_t queue_IT;
 extern SemaphoreHandle_t xSemaphore;
 extern SemaphoreHandle_t xsemaphoreIT;
 
