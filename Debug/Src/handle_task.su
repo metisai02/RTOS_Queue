@@ -1,3 +1,4 @@
 handle_task.c:17:6:print_task	88	static
-handle_task.c:40:6:led_task	24	static
-handle_task.c:54:6:receive_task	136	static
+handle_task.c:41:6:led_task	24	static
+handle_task.c:57:6:toggle_led	16	static
+handle_task.c:66:6:receive_task	136	static

@@ -51,6 +51,7 @@ UART_HandleTypeDef huart6;
 xTaskHandle handle_print_task;
 xTaskHandle handle_led_task;
 xTaskHandle handle_receive_task;
+xTaskHandle toggleled;
 
 QueueHandle_t queue_print;
 QueueHandle_t queue_IT;
@@ -117,6 +118,8 @@ int main(void)
   MX_USART2_UART_Init();
   MX_USART6_UART_Init();
   /* USER CODE BEGIN 2 */
+  status = xTaskCreate(toggle_led, "toggleled", 100, NULL, 1, &toggleled);
+  configASSERT(status == pdPASS);
 
   status = xTaskCreate(print_task, "print_task", 400, NULL, 2, &handle_print_task);
 
@@ -129,7 +132,7 @@ int main(void)
   status = xTaskCreate(receive_task, "receive_task", 400, NULL, 4, &handle_receive_task);
 
   configASSERT(status == pdPASS);
-  queue_IT = xQueueCreate(2, 4);
+  queue_IT = xQueueCreate(20, 4);
 
   vSemaphoreCreateBinary(xSemaphore);
   xsemaphoreIT = xSemaphoreCreateCounting(20, 0);
@@ -308,7 +311,14 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOC_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOD, LED1_Pin|LED_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin : LED1_Pin */
+  GPIO_InitStruct.Pin = LED1_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(LED1_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pin : LED_Pin */
   GPIO_InitStruct.Pin = LED_Pin;
@@ -326,16 +336,26 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
     uint32_t check;
     if (huart->Instance == USART1)
     {
-      check = USART1_BASE;
-      xQueueSendFromISR(queue_IT, &check, &xHigherPriorityTaskWoken);
+      check = 1;
+      xQueueSendFromISR(queue_IT, &check, NULL);
     }
     else if (huart->Instance == USART6)
     {
-      check = USART6_BASE;
-      xQueueSendFromISR(queue_IT, &check, &xHigherPriorityTaskWoken);
+      check = 6;
+      xQueueSendFromISR(queue_IT, &check, NULL);
     }
     xSemaphoreGiveFromISR(xsemaphoreIT, &xHigherPriorityTaskWoken);
     portEND_SWITCHING_ISR(xHigherPriorityTaskWoken);
+//    char a;
+//    HAL_UART_Receive_IT(huart, &a, 1);
+
+}
+void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
+{
+
+
+
+
 }
 
 /* USER CODE END 4 */

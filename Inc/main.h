@@ -47,6 +47,7 @@ extern "C" {
 extern xTaskHandle handle_print_task;
 extern xTaskHandle handle_led_task;
 extern xTaskHandle handle_receive_task;
+extern xTaskHandle toggleled;
 
 extern QueueHandle_t queue_print;
 extern QueueHandle_t queue_IT;
@@ -73,9 +74,12 @@ void Error_Handler(void);
 void print_task(void *param);
 void led_task(void *param);
 void receive_task(void*param );
+void toggle_led(void*param );
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define LED1_Pin GPIO_PIN_14
+#define LED1_GPIO_Port GPIOD
 #define LED_Pin GPIO_PIN_15
 #define LED_GPIO_Port GPIOD
 /* USER CODE BEGIN Private defines */
